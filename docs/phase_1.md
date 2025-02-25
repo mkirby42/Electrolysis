@@ -13,7 +13,12 @@ Create two tasks
 - log the data
 - use `vTaskDelay()` to control task execution and timing
 
-Deliverable: Working ESP32 FreeRTOS w two tasks
+- [x] Hand On RTOS w micro controllers Chapter 1: Introducing Real Time Systems
+- [ ] Hand On RTOS w micro controllers Chapter 2: Understanding RTOS Tasks
+- [x] The Art of Writing Efficient Programs Chapter 1: Introduction to Performance and Concurrency
+- [ ] Map Reduce: Simplified Data Processing on Large Clusters
+- [x] Notes on Redis
+- [x] Deliverable: Working ESP32 FreeRTOS w two tasks
 
 ### Week 2
 Objective: learn task synchronization, mutexes, and interrupt handling
@@ -23,7 +28,10 @@ Objective: learn task synchronization, mutexes, and interrupt handling
 - Read more of RTOS book
 - Read about priority inversion and real time scheduling 
 
-Deliverable: A real time data acquisition system with FreeRTOS tasks and ISR
+- [ ] Notes on DynamoDB
+- [ ] The Art of Writing Efficient Programs Chapter 2: Performance Measurements
+- [ ] The Art of Writing Efficient Programs Chapter 3: CPU Architectures, Resources, and Performance Implications
+- [ ] Deliverable: A real time data acquisition system with FreeRTOS tasks and ISR
 
 ### Week 3
 Objective: Optimize memory usage, reduce latency, and stream sensor data efficiently
@@ -33,7 +41,9 @@ Objective: Optimize memory usage, reduce latency, and stream sensor data efficie
 - Compression
 - The art of writing efficient programs
 
-Deliverable: Low latency data pipeline for sensor readings with optimized memory allocation
+- [ ] The Art of Writing Efficient Programs Chapter 4: Memory Architecture and Performance
+- [ ] The Art of Writing Efficient Programs Chapter 5: Threads, Memory, and Concurrency 
+- [ ] Deliverable: Low latency data pipeline for sensor readings with optimized memory allocation
 
 ### Week 4
 Objective: Set up real time data streaming from ESP32 to a server & dashboard
@@ -44,7 +54,7 @@ Objective: Set up real time data streaming from ESP32 to a server & dashboard
 - Experiment with Time sensitive networking features on ESP32
 - Read about real time message passing (pub sub)
 
-Deliverable: ESP32 streams real time sensor data to server
+- [ ] Deliverable: ESP32 streams real time sensor data to server
 
 ### Week 5
 Objective: Implement real time control of electrolysis parameters based on sensor feedback
@@ -53,7 +63,7 @@ Objective: Implement real time control of electrolysis parameters based on senso
 - Implement PID control in C to stabilize temperature and gas production rates
 - Study real time scheduling algorithms (rate monitoring, earliest deadline first)
 
-Deliverable: A working feedback loop where ESP dynamically adjusts reactor operation
+- [ ] Deliverable: A working feedback loop where ESP dynamically adjusts reactor operation
 
 ### Week 6
 Objective: Optimize real time performance 
@@ -63,4 +73,4 @@ Objective: Optimize real time performance
 - Implement watchdog timer & fault recovery
 - Read about zero copy data transfer techniques
 
-Deliverable: Optimized real time software for stable electrolysis control
+- [ ] Deliverable: Optimized real time software for stable electrolysis control
