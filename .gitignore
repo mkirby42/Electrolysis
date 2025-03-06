@@ -5,3 +5,5 @@ build/
 *.key
 *.pem
 awec/The-Art-of-Writing-Efficient-Programs
+go_by_example/*
+!go_by_example/*.go

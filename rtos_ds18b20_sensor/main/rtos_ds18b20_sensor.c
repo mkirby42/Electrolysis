@@ -25,6 +25,9 @@ int bufferIndex = 0;
 // FreeRTOS Queue for inter-task communication
 QueueHandle_t tempQueue;
 
+// Timer handle
+esp_timer_handle_t temp_timer;
+
 // OneWire protocol functions
 static void ds18b20_init(void) {
     gpio_set_direction(DS18B20_PIN, GPIO_MODE_OUTPUT);
@@ -101,20 +104,17 @@ float readDS18B20Temperature() {
     return temperature;
 }
 
-void readTemperatureTask(void *pvParameters) {
-    ds18b20_init();
-    
-    while (1) {
-        float temperature = readDS18B20Temperature();
-        if (temperature > -999.0) {
-            float temperatureF = (temperature * 9 / 5) + 32;
-            ESP_LOGI(TAG, "Temperature Read: %.2f°C / %.2f°F", temperature, temperatureF);
-            xQueueSend(tempQueue, &temperature, portMAX_DELAY);
-        }
-        vTaskDelay(pdMS_TO_TICKS(TEMP_READ_INTERVAL_MS));
+// Timer callback function
+static void timer_callback(void* arg) {
+    float temperature = readDS18B20Temperature();
+    if (temperature > -999.0) {
+        float temperatureF = (temperature * 9 / 5) + 32;
+        ESP_LOGI(TAG, "Temperature Read: %.2f°C / %.2f°F", temperature, temperatureF);
+        xQueueSend(tempQueue, &temperature, portMAX_DELAY);
     }
 }
 
+// Store temperature readings in circular buffer
 void storeTemperatureTask(void *pvParameters) {
     float receivedTemp;
     
@@ -130,8 +130,22 @@ void storeTemperatureTask(void *pvParameters) {
 void app_main() {
     ESP_LOGI(TAG, "Starting DS18B20 Temperature Monitoring...");
 
+    // Initialize DS18B20
+    ds18b20_init();
+
+    // Create queue
     tempQueue = xQueueCreate(5, sizeof(float));
 
-    xTaskCreate(readTemperatureTask, "ReadTempTask", 2048, NULL, 2, NULL);
+    // Configure timer
+    esp_timer_create_args_t timer_args = {
+        .callback = timer_callback,
+        .name = "temp_timer"
+    };
+    ESP_ERROR_CHECK(esp_timer_create(&timer_args, &temp_timer));
+
+    // Start timer
+    ESP_ERROR_CHECK(esp_timer_start_periodic(temp_timer, TEMP_READ_INTERVAL_MS * 1000));
+
+    // Create storage task
     xTaskCreate(storeTemperatureTask, "StoreTempTask", 2048, NULL, 1, NULL);
 } 
