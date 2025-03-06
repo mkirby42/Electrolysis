@@ -34,9 +34,9 @@ Objective: learn task synchronization, mutexes, and interrupt handling
 - [ ] Notes on DynamoDB
 - [x] The Art of Writing Efficient Programs Chapter 2: Performance Measurements
 - [ ] The Art of Writing Efficient Programs Chapter 3: CPU Architectures, Resources, and Performance Implications
-- [ ] Hand On RTOS w micro controllers Chapter 3: Task Scheduling and Communication Mechanisms
+- [x] Hand On RTOS w micro controllers Chapter 3: Task Scheduling and Communication Mechanisms
 - [x] Deliverable: A real time data acquisition system with FreeRTOS tasks and ISR
-- [ ] [The Design of a Practical System for Fault-Tolerant Virtual Machines](https://pdos.csail.mit.edu/6.824/papers/vm-ft.pdf)
+- [x] [The Design of a Practical System for Fault-Tolerant Virtual Machines](https://pdos.csail.mit.edu/6.824/papers/vm-ft.pdf)
 - [ ] [In search of an Understandable Consensus Algorithm](https://pdos.csail.mit.edu/6.824/papers/raft-extended.pdf)
 
 ### Week 3
@@ -49,6 +49,7 @@ Objective: Optimize memory usage, reduce latency, and stream sensor data efficie
 
 - [ ] The Art of Writing Efficient Programs Chapter 4: Memory Architecture and Performance
 - [ ] The Art of Writing Efficient Programs Chapter 5: Threads, Memory, and Concurrency 
+- [ ] Hand On RTOS w micro controllers Chapter 7: The RTOS Scheduler
 - [ ] [The Go Programming Language and Environment](https://dl.acm.org/doi/pdf/10.1145/3488716)
 - [ ] [ZooKeeper: Wait-free coordination for Internet-scale systems](https://pdos.csail.mit.edu/6.824/papers/zookeeper.pdf)
  - [ ] [Chapter 9: Atomicity: All-or-nothing and Before-or-after](https://ocw.mit.edu/courses/res-6-004-principles-of-computer-system-design-an-introduction-spring-2009/resources/atomicity_open_5_0/)

@@ -8,6 +8,8 @@
 #include "rom/ets_sys.h"
 #include "esp_timer.h"
 #include "hal/gpio_types.h"
+#include "esp_system.h"
+#include "time.h"
 
 #define TEMP_READ_INTERVAL_MS 2000  // Read temperature every 2 seconds
 #define BUFFER_SIZE 10              // Store last 10 readings
@@ -18,8 +20,14 @@
 
 static const char *TAG = "DS18B20App";
 
-// Circular buffer to store temperature readings
-float temperatureBuffer[BUFFER_SIZE];
+// Add this struct after your existing defines
+typedef struct {
+    float temperature_celsius;
+    time_t timestamp_seconds;
+} temp_reading_t;
+
+// Update the buffer and queue to use the new struct
+temp_reading_t temperatureBuffer[BUFFER_SIZE];
 int bufferIndex = 0;
 
 // FreeRTOS Queue for inter-task communication
@@ -106,24 +114,41 @@ float readDS18B20Temperature() {
 
 // Timer callback function
 static void timer_callback(void* arg) {
-    float temperature = readDS18B20Temperature();
-    if (temperature > -999.0) {
-        float temperatureF = (temperature * 9 / 5) + 32;
-        ESP_LOGI(TAG, "Temperature Read: %.2f°C / %.2f°F", temperature, temperatureF);
-        xQueueSend(tempQueue, &temperature, portMAX_DELAY);
+    temp_reading_t reading;
+    reading.temperature_celsius = readDS18B20Temperature();
+    reading.timestamp_seconds = time(NULL);
+    
+    if (reading.temperature_celsius > -999.0) {
+        float temperatureF = (reading.temperature_celsius * 9 / 5) + 32;
+        ESP_LOGI(TAG, "Temperature Read: %.2f°C / %.2f°F at %ld", 
+                 reading.temperature_celsius, temperatureF, reading.timestamp_seconds);
+        xQueueSend(tempQueue, &reading, portMAX_DELAY);
     }
 }
 
 // Store temperature readings in circular buffer
 void storeTemperatureTask(void *pvParameters) {
-    float receivedTemp;
+    temp_reading_t receivedReading;
+    UBaseType_t watermark;
     
     while (1) {
-        if (xQueueReceive(tempQueue, &receivedTemp, portMAX_DELAY)) {
-            temperatureBuffer[bufferIndex] = receivedTemp;
+        if (xQueueReceive(tempQueue, &receivedReading, portMAX_DELAY)) {
+            temperatureBuffer[bufferIndex] = receivedReading;
             bufferIndex = (bufferIndex + 1) % BUFFER_SIZE;
-            ESP_LOGI(TAG, "Stored Temperature: %.2f°C (Index: %d)", receivedTemp, bufferIndex);
+            
+            // Convert timestamp to readable format
+            char timeStr[64];
+            struct tm timeinfo;
+            localtime_r(&receivedReading.timestamp_seconds, &timeinfo);
+            strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", &timeinfo);
+            
+            ESP_LOGI(TAG, "Stored Temperature: %.2f°C at %s (Index: %d)", 
+                     receivedReading.temperature_celsius, timeStr, bufferIndex);
         }
+
+        // Print remaining stack space periodically
+        watermark = uxTaskGetStackHighWaterMark(NULL);
+        ESP_LOGI(TAG, "Remaining stack: %d bytes", watermark * 4);
     }
 }
 
@@ -134,7 +159,7 @@ void app_main() {
     ds18b20_init();
 
     // Create queue
-    tempQueue = xQueueCreate(5, sizeof(float));
+    tempQueue = xQueueCreate(5, sizeof(temp_reading_t));
 
     // Configure timer
     esp_timer_create_args_t timer_args = {
