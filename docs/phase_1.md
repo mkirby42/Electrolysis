@@ -32,10 +32,10 @@ Objective: learn task synchronization, mutexes, and interrupt handling
 - Read about priority inversion and real time scheduling 
 
 - [ ] Notes on DynamoDB
-- [ ] The Art of Writing Efficient Programs Chapter 2: Performance Measurements
+- [x] The Art of Writing Efficient Programs Chapter 2: Performance Measurements
 - [ ] The Art of Writing Efficient Programs Chapter 3: CPU Architectures, Resources, and Performance Implications
 - [ ] Hand On RTOS w micro controllers Chapter 3: Task Scheduling and Communication Mechanisms
-- [ ] Deliverable: A real time data acquisition system with FreeRTOS tasks and ISR
+- [x] Deliverable: A real time data acquisition system with FreeRTOS tasks and ISR
 - [ ] [The Design of a Practical System for Fault-Tolerant Virtual Machines](https://pdos.csail.mit.edu/6.824/papers/vm-ft.pdf)
 - [ ] [In search of an Understandable Consensus Algorithm](https://pdos.csail.mit.edu/6.824/papers/raft-extended.pdf)
 
