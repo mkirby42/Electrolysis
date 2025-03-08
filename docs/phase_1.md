@@ -17,7 +17,6 @@ Create two tasks
 - [x] Hand On RTOS w micro controllers Chapter 2: Understanding RTOS Tasks
 - [x] The Art of Writing Efficient Programs Chapter 1: Introduction to Performance and Concurrency
 - [x] [Map Reduce: Simplified Data Processing on Large Clusters](https://pdos.csail.mit.edu/6.824/papers/mapreduce.pdf)
-- [ ] [The Google File System](https://pdos.csail.mit.edu/6.824/papers/gfs.pdf)
 - [x] Notes on Redis
 - [x] Deliverable: Working ESP32 FreeRTOS w two tasks
 - [x] Deliverable: Working ESP32 FreeRTOS w AWS IoT Integration
@@ -98,3 +97,4 @@ Objective: Optimize real time performance
 - [ ] [Secure Untrusted Data Repository (SUNDR)](https://pdos.csail.mit.edu/6.824/papers/li-sundr.pdf)
 - [ ] [Practical Byzantine Fault Tolerance](https://pdos.csail.mit.edu/6.824/papers/castro-practicalbft.pdf)
 - [ ] [Bitcoin: A Peer-to-Peer Electronic Cash System](https://pdos.csail.mit.edu/6.824/papers/bitcoin.pdf)
+- [ ] [The Google File System](https://pdos.csail.mit.edu/6.824/papers/gfs.pdf)
