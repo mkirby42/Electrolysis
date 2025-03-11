@@ -30,13 +30,12 @@ Objective: learn task synchronization, mutexes, and interrupt handling
 - Read more of RTOS book
 - Read about priority inversion and real time scheduling 
 
-- [ ] Notes on DynamoDB
+- [x] Notes on DynamoDB
 - [x] The Art of Writing Efficient Programs Chapter 2: Performance Measurements
 - [ ] The Art of Writing Efficient Programs Chapter 3: CPU Architectures, Resources, and Performance Implications
 - [x] Hand On RTOS w micro controllers Chapter 3: Task Scheduling and Communication Mechanisms
 - [x] Deliverable: A real time data acquisition system with FreeRTOS tasks and ISR
 - [x] [The Design of a Practical System for Fault-Tolerant Virtual Machines](https://pdos.csail.mit.edu/6.824/papers/vm-ft.pdf)
-- [ ] [In search of an Understandable Consensus Algorithm](https://pdos.csail.mit.edu/6.824/papers/raft-extended.pdf)
 
 ### Week 3
 Objective: Optimize memory usage, reduce latency, and stream sensor data efficiently
@@ -47,11 +46,9 @@ Objective: Optimize memory usage, reduce latency, and stream sensor data efficie
 - The art of writing efficient programs
 
 - [ ] The Art of Writing Efficient Programs Chapter 4: Memory Architecture and Performance
-- [ ] The Art of Writing Efficient Programs Chapter 5: Threads, Memory, and Concurrency 
 - [ ] Hand On RTOS w micro controllers Chapter 7: The RTOS Scheduler
 - [ ] [The Go Programming Language and Environment](https://dl.acm.org/doi/pdf/10.1145/3488716)
 - [ ] [ZooKeeper: Wait-free coordination for Internet-scale systems](https://pdos.csail.mit.edu/6.824/papers/zookeeper.pdf)
- - [ ] [Chapter 9: Atomicity: All-or-nothing and Before-or-after](https://ocw.mit.edu/courses/res-6-004-principles-of-computer-system-design-an-introduction-spring-2009/resources/atomicity_open_5_0/)
  - [ ] Deliverable: Low latency data pipeline for sensor readings with optimized memory allocation
 
 ### Week 4
@@ -66,7 +63,9 @@ Objective: Set up real time data streaming from ESP32 to a server & dashboard
 - [ ] [AWS MQTT](https://docs.aws.amazon.com/iot/latest/developerguide/mqtt.html)
 = [ ] [Spanner: Google’s Globally-Distributed Database](https://pdos.csail.mit.edu/6.824/papers/spanner.pdf)
 - [ ] [No compromises: distributed transactions with consistency, availability, and performance](https://pdos.csail.mit.edu/6.824/papers/farm-2015.pdf)
+- [ ] The Art of Writing Efficient Programs Chapter 5: Threads, Memory, and Concurrency 
 - [ ] Deliverable: ESP32 streams real time sensor data to server
+- [ ] [Chapter 9: Atomicity: All-or-nothing and Before-or-after](https://ocw.mit.edu/courses/res-6-004-principles-of-computer-system-design-an-introduction-spring-2009/resources/atomicity_open_5_0/)
 
 ### Week 5
 Objective: Implement real time control of electrolysis parameters based on sensor feedback
@@ -92,6 +91,7 @@ Objective: Optimize real time performance
 - [ ] Deliverable: Optimized real time software for stable electrolysis control
 
 ### More Papers
+- [ ] [In search of an Understandable Consensus Algorithm](https://pdos.csail.mit.edu/6.824/papers/raft-extended.pdf)
 = [ ] [Grove: a Separation-Logic Library for Verifying Distributed Systems](https://pdos.csail.mit.edu/6.824/papers/grove.pdf)
 - [ ] [On-demand Container Loading in AWS Lambda](https://pdos.csail.mit.edu/6.824/papers/atc23-brooker.pdf)- [ ] [Boki: Stateful Serverless Computing with Shared Logs](https://pdos.csail.mit.edu/6.824/papers/jia21sosp-boki.pdf)
 - [ ] [Secure Untrusted Data Repository (SUNDR)](https://pdos.csail.mit.edu/6.824/papers/li-sundr.pdf)
