@@ -10,6 +10,8 @@ set(COMPONENT_SRCS
 	"app_main.c"
 	"mqtt_demo_mutual_auth.c"
     "rtos_ds18b20_sensor.c"
+    "mqtt_batch_publisher.c"
+    "aws_iot.c"
 	"${MQTT_SOURCES}"
 	"${MQTT_SERIALIZER_SOURCES}"
 	"${BACKOFF_ALGORITHM_SOURCES}"

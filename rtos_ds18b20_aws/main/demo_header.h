@@ -6,6 +6,16 @@
 #ifndef DEMO_HEADER_H_
 #define DEMO_HEADER_H_
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
+#include <time.h>
+#include "rtos_ds18b20_sensor.h"
+
+/**
+ * @brief Queue for batch temperature readings
+ */
+extern QueueHandle_t batchQueue;
+
 /**
  * @brief Function signature of the main entry point of the AWS IoT demo.
  */

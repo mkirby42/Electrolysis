@@ -203,4 +203,20 @@
 #define MQTT_EXAMPLE_MESSAGE               "Hello from ESP32 DS18B20 Temperature Sensor!"
 #define MQTT_EXAMPLE_MESSAGE_LENGTH        ( ( uint16_t ) ( sizeof( MQTT_EXAMPLE_MESSAGE ) - 1 ) )
 
+/**
+ * @brief AWS IoT MQTT ALPN protocol name.
+ */
+#define AWS_IOT_MQTT_ALPN                 "x-amzn-mqtt-ca"
+
+/**
+ * @brief AWS IoT MQTT client identifier length.
+ */
+#define CLIENT_IDENTIFIER_LENGTH           ( ( uint16_t ) ( sizeof( CLIENT_IDENTIFIER ) - 1 ) )
+
+/**
+ * @brief AWS IoT MQTT metrics string.
+ */
+#define METRICS_STRING                      "?SDK=" OS_NAME "&Version=" OS_VERSION "&Platform=" HARDWARE_PLATFORM_NAME "&MQTTLib=" MQTT_LIB
+#define METRICS_STRING_LENGTH               ( ( uint16_t ) ( sizeof( METRICS_STRING ) - 1 ) )
+
 #endif /* ifndef DEMO_CONFIG_H_ */

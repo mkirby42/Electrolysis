@@ -32,7 +32,7 @@ Objective: learn task synchronization, mutexes, and interrupt handling
 
 - [x] Notes on DynamoDB
 - [x] The Art of Writing Efficient Programs Chapter 2: Performance Measurements
-- [ ] The Art of Writing Efficient Programs Chapter 3: CPU Architectures, Resources, and Performance Implications
+- [x] The Art of Writing Efficient Programs Chapter 3: CPU Architectures, Resources, and Performance Implications
 - [x] Hand On RTOS w micro controllers Chapter 3: Task Scheduling and Communication Mechanisms
 - [x] Deliverable: A real time data acquisition system with FreeRTOS tasks and ISR
 - [x] [The Design of a Practical System for Fault-Tolerant Virtual Machines](https://pdos.csail.mit.edu/6.824/papers/vm-ft.pdf)

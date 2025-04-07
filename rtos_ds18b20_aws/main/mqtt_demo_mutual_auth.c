@@ -341,6 +341,52 @@ static uint16_t globalUnsubscribePacketIdentifier = 0U;
  */
 static PublishPackets_t outgoingPublishPackets[ MAX_OUTGOING_PUBLISHES ] = { 0 };
 
+/* Forward declaration of the batch processing task from mqtt_batch_publisher.c */
+extern void processBatchedReadings( void * pvParameters );
+
+/* Expose publish function for batch publisher */
+MQTTStatus_t publishMQTTMessage( MQTTContext_t * pMqttContext,
+                              const char * topic,
+                              uint16_t topicLen,
+                              const char * payload,
+                              size_t payloadLen )
+{
+    MQTTStatus_t mqttStatus = MQTTSuccess;
+    MQTTPublishInfo_t publishInfo;
+    uint16_t packetId;
+
+    /* Set publish info for the temperature topic. */
+    memset( &publishInfo, 0x00, sizeof( MQTTPublishInfo_t ) );
+    publishInfo.qos = MQTTQoS1;
+    publishInfo.pTopicName = topic;
+    publishInfo.topicNameLength = topicLen;
+    publishInfo.pPayload = payload;
+    publishInfo.payloadLength = payloadLen;
+    publishInfo.retain = false;
+    publishInfo.dup = false;
+
+    packetId = MQTT_GetPacketId( pMqttContext );
+
+    mqttStatus = MQTT_Publish( pMqttContext, &publishInfo, packetId );
+
+    if( mqttStatus != MQTTSuccess )
+    {
+        LogError( ( "Failed to publish to topic %.*s: %s",
+                    topicLen,
+                    topic,
+                    MQTT_Status_strerror( mqttStatus ) ) );
+    }
+    else
+    {
+        LogInfo( ( "Successfully published to topic %.*s, payload: %.20s... (truncated)",
+                   topicLen,
+                   topic,
+                   ( char * ) payload ) );
+    }
+
+    return mqttStatus;
+}
+
 /**
  * @brief Array to keep subscription topics.
  * Used to re-subscribe to topics that failed initial subscription attempts.
@@ -404,7 +450,37 @@ static int subscribePublishLoop( MQTTContext_t * pMqttContext,
  * @param[in] packetIdentifier Packet identifier of the incoming publish.
  */
 static void handleIncomingPublish( MQTTPublishInfo_t * pPublishInfo,
-                                   uint16_t packetIdentifier );
+                                   uint16_t packetIdentifier )
+{
+    assert( pPublishInfo != NULL );
+
+    /* Process incoming Publish. */
+    LogInfo( ( "Incoming QOS : %d.", pPublishInfo->qos ) );
+
+    /* Verify the received publish is for the topic we have subscribed to. */
+    if( ( pPublishInfo->topicNameLength == MQTT_EXAMPLE_TOPIC_LENGTH ) &&
+        ( 0 == strncmp( MQTT_EXAMPLE_TOPIC,
+                        pPublishInfo->pTopicName,
+                        pPublishInfo->topicNameLength ) ) )
+    {
+        LogInfo( ( "Incoming Publish Topic Name: %.*s matches subscribed topic.\n"
+                   "Incoming Publish message Packet Id is %u.\n"
+                   "Incoming Publish Message : %.*s.\n\n",
+                   pPublishInfo->topicNameLength,
+                   pPublishInfo->pTopicName,
+                   packetIdentifier,
+                   ( int ) pPublishInfo->payloadLength,
+                   ( const char * ) pPublishInfo->pPayload ) );
+    }
+    else
+    {
+        LogInfo( ( "Incoming Publish Topic Name: %.*s does not match subscribed topic %.*s.",
+                   pPublishInfo->topicNameLength,
+                   pPublishInfo->pTopicName,
+                   MQTT_EXAMPLE_TOPIC_LENGTH,
+                   MQTT_EXAMPLE_TOPIC ) );
+    }
+}
 
 /**
  * @brief The application callback function for getting the incoming publish
@@ -816,39 +892,6 @@ static int handlePublishResend( MQTTContext_t * pMqttContext )
 
 /*-----------------------------------------------------------*/
 
-static void handleIncomingPublish( MQTTPublishInfo_t * pPublishInfo,
-                                   uint16_t packetIdentifier )
-{
-    assert( pPublishInfo != NULL );
-
-    /* Process incoming Publish. */
-    LogInfo( ( "Incoming QOS : %d.", pPublishInfo->qos ) );
-
-    /* Verify the received publish is for the topic we have subscribed to. */
-    if( ( pPublishInfo->topicNameLength == MQTT_EXAMPLE_TOPIC_LENGTH ) &&
-        ( 0 == strncmp( MQTT_EXAMPLE_TOPIC,
-                        pPublishInfo->pTopicName,
-                        pPublishInfo->topicNameLength ) ) )
-    {
-        LogInfo( ( "Incoming Publish Topic Name: %.*s matches subscribed topic.\n"
-                   "Incoming Publish message Packet Id is %u.\n"
-                   "Incoming Publish Message : %.*s.\n\n",
-                   pPublishInfo->topicNameLength,
-                   pPublishInfo->pTopicName,
-                   packetIdentifier,
-                   ( int ) pPublishInfo->payloadLength,
-                   ( const char * ) pPublishInfo->pPayload ) );
-    }
-    else
-    {
-        LogInfo( ( "Incoming Publish Topic Name: %.*s does not match subscribed topic.",
-                   pPublishInfo->topicNameLength,
-                   pPublishInfo->pTopicName ) );
-    }
-}
-
-/*-----------------------------------------------------------*/
-
 static void updateSubAckStatus( MQTTPacketInfo_t * pPacketInfo )
 {
     uint8_t * pPayload = NULL;
@@ -1162,7 +1205,9 @@ static int subscribeToTopic( MQTTContext_t * pMqttContext )
 
     if( mqttStatus != MQTTSuccess )
     {
-        LogError( ( "Failed to send SUBSCRIBE packet to broker with error = %s.",
+        LogError( ( "Failed to SUBSCRIBE to topic %.*s with error = %s.",
+                    MQTT_EXAMPLE_TOPIC_LENGTH,
+                    MQTT_EXAMPLE_TOPIC,
                     MQTT_Status_strerror( mqttStatus ) ) );
         returnStatus = EXIT_FAILURE;
     }
@@ -1171,6 +1216,32 @@ static int subscribeToTopic( MQTTContext_t * pMqttContext )
         LogInfo( ( "SUBSCRIBE sent for topic %.*s to broker.\n\n",
                    MQTT_EXAMPLE_TOPIC_LENGTH,
                    MQTT_EXAMPLE_TOPIC ) );
+    }
+
+    /* Start the batch processing task if successfully subscribed */
+    if( returnStatus == EXIT_SUCCESS )
+    {
+        static TaskHandle_t batchTaskHandle = NULL;
+        
+        // Only create the task once
+        if (batchTaskHandle == NULL) {
+            LogInfo( ( "Creating batch processing task for temperature data" ) );
+            BaseType_t xReturned = xTaskCreate(processBatchedReadings, 
+                                 "BatchProcessor", 
+                                 4096, 
+                                 pMqttContext, 
+                                 3, 
+                                 &batchTaskHandle);
+            
+            if (xReturned != pdPASS) {
+                LogError( ( "Failed to create batch processing task" ) );
+                returnStatus = EXIT_FAILURE;
+            } else {
+                LogInfo( ( "Successfully created batch processing task" ) );
+            }
+        } else {
+            LogInfo( ( "Batch processing task already running" ) );
+        }
     }
 
     return returnStatus;
@@ -1524,8 +1595,7 @@ static int subscribePublishLoop( MQTTContext_t * pMqttContext,
  * are resent in this demo. In order to support retransmission all the outgoing
  * publishes are stored until a PUBACK is received.
  */
-int aws_iot_demo_main( int argc,
-          char ** argv )
+int aws_iot_demo_main( int argc, char ** argv )
 {
     int returnStatus = EXIT_SUCCESS;
     MQTTContext_t mqttContext = { 0 };
